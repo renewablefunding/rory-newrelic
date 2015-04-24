@@ -1,8 +1,6 @@
 # Rory::Newrelic
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/rory/newrelic`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+Newrelic instrumentation for the popular Rory framework
 
 ## Installation
 
@@ -22,7 +20,22 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+in your `application.rb` drop this code:
+
+```ruby
+require 'rory/newrelic'
+Rory::NewRelic.hook_application
+```
+
+if you need to change where the controllers folder is, the application to use, or which environments to initialize, you can do so using a configure block.
+
+```ruby
+Rory::NewRelic.configure do |c|
+  c.application = Rory::Application.instance
+  c.controllers_folder = "#{Rory.root}/controllers"
+  c.environments = %w(production development test)
+end
+```
 
 ## Development
 
