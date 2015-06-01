@@ -36,7 +36,7 @@ module Rory
     end
 
     def environments
-      @environments ||= %w(production development test)
+      @environments ||= %w(production development)
     end
 
     def hook_application
