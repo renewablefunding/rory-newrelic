@@ -58,10 +58,18 @@ module Rory
       end
     end
 
+    def relative_file_path(filename)
+      Pathname.new(filename).relative_path_from(Pathname.new(controllers_folder)).to_s.sub(/\..*/, '')
+    end
+
+    def class_name_from_filename(filename)
+      Rory::Support.camelize(relative_file_path(filename))
+    end
+
     def methods_hash
       {}.tap do |hash|
-        Dir[File.expand_path(controllers_folder + '/**/*.rb')].map{|f| File.basename(f,'.rb')}.each do |f|
-          controller_class = Object.const_get(Rory::Support.camelize(f))
+        Dir[File.expand_path(controllers_folder + '/**/*.rb')].each do |f|
+          controller_class = Object.const_get(class_name_from_filename(f))
           hash[controller_class] = (controller_class.instance_methods - Rory::Controller.instance_methods).each {|m| methods << m }
         end
       end
