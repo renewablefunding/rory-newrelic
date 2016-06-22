@@ -5,8 +5,11 @@ require "newrelic_rpm"
 require "new_relic/rack/agent_hooks"
 require "new_relic/rack/browser_monitoring"
 require "new_relic/agent/instrumentation/rack"
-Rory::Application.instance.use_middleware NewRelic::Rack::BrowserMonitoring
-Rory::Application.instance.use_middleware NewRelic::Rack::AgentHooks
+
+Rory::Application.initializers.add "rory-newrelic.middleware" do |app|
+  app.middleware.use NewRelic::Rack::BrowserMonitoring
+  app.middleware.use NewRelic::Rack::AgentHooks
+end
 
 module Rory
   class NewRelic
@@ -40,7 +43,6 @@ module Rory
     end
 
     def hook_application
-      require_relative "newrelic/obfuscator"
 
       if environments.include?(ENV['RORY_ENV'])
         application.class_eval do
